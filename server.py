@@ -31,35 +31,6 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         self.request.sendall(router.route_request(request))
         # TODO: Parse the HTTP request and use self.request.sendall(response) to send your response
 
-    def determineSentRequest(self, request:Request):
-
-        if request.path == "/":
-            self.sendHTML(request)
-
-        elif request.path.__contains__("/public"):
-            self.sendGeneric(request)
-
-        elif request.path.__contains__("/chat-messages") and request.method == "POST":
-            self.storeMessage(request)
-                         
-        elif request.path.__contains__("/chat-messages") and request.method == "GET" and request.path.count("/") == 2:
-            self.getSingleMessage(request)
-        
-        elif request.path.__contains__("/chat-messages") and request.method == "GET" and request.path.count("/") == 1:
-            self.sendMessage(request)
-            
-        elif request.method.__contains__("DELETE"):  
-            self.deleteMessage(request)
-        
-        elif request.method.__contains__("PUT"):
-            self.updateMessage(request)           
-        
-        else:
-            
-            print(request.method, request.path, request.http_version, request.body, "From the Else Claw in Determine HTMP")
-            response = b"HTTP/1.1 404 Not Found \r\nContent-Type: text/plain\r\nContent-Length: 36\r\nX-Content-Type-Options: nosniff \r\n\r\nThe Requested Content Does Not Exist"
-            self.request.sendall(response)
-
     def sendHTML(self, request: Request):
         visit = 1
         if request.cookies.get("visits"):

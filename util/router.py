@@ -1,5 +1,4 @@
 import re
-
 class Router:
     
 
@@ -17,6 +16,7 @@ class Router:
             
             listOfInfo = self.routeHolder[httpMethod]
             listOfInfo.append(info)
+            self.routeHolder.update({httpMethod: listOfInfo})
             return
         self.routeHolder[httpMethod] = [info]
         return 
@@ -57,5 +57,7 @@ class Router:
 
 #     for i in request:
 #         print(router.route_request(i))
+    
+#     print(router.routeHolder)
 
 # test()
