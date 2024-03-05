@@ -3,9 +3,9 @@ class Router:
     
 
     def __init__(self) -> None:
-        pass
+        self.routeHolder = {}
+
     
-    routeHolder = {}
     
     def add_route(self, httpMethod, path, method):  
         
@@ -81,12 +81,42 @@ def test1():
         
         assert router.route_request(requestRoutes[i]) == expectedAnswers[i]
             
+def test2():
+    
+    router = Router()
+    
+    routes = [{"method": "GET", 'path':"^/public/images/kitten.jpg$", 'function': testFunction2}]
+    
+    requestRoutes = [Request(b"GET /public/images/kitten.jpg HTTP/1.1 200 Ok \r\nContent-Type: text/plain \r\n\r\nThis Request 1"), 
+                     Request(b"GET /index HTTP/1.1 200 Ok \r\nContent-Type: text/plain \r\n\r\nThis Request 2")]
+    
+    expectedAnswer = [b"Test Function 2 was called now return Binary", 
+                      b"HTTP/1.1 404 Not Found \r\nContent-Type: text/plain\r\nContent-Length: 36\r\nX-Content-Type-Options: nosniff \r\n\r\nThe Requested Content Does Not Exist"]
+    
+    
+    router.add_route(routes[0]['method'], routes[0]['path'], routes[0]['function'])
+    
+    
+    print(router.routeHolder)
+    for i in range(len(requestRoutes)):
+
         
+        assert router.route_request(requestRoutes[i]) == expectedAnswer[i]    
+    
+    
+    
+    
+    
+    
+    
+    
+    
         
 
 
 def test():
     test1()
+    test2()
     
     return
 
