@@ -34,30 +34,60 @@ class Router:
         return b"HTTP/1.1 404 Not Found \r\nContent-Type: text/plain\r\nContent-Length: 36\r\nX-Content-Type-Options: nosniff \r\n\r\nThe Requested Content Does Not Exist"
 
 
-# def some(request):
+from request import Request
+
+
+
+def testFunction(request):
     
-#     return request.body
+    response = f"Test Function was called"
+    return response
+
+
+def testFunction2(request):
+    response = b"Test Function 2 was called now return Binary"
+    return response
+    
+
+def test1():
+    router = Router()
+    
+    routes = [{"method": "GET", 'path':"^/index", 'function': testFunction},
+              {"method": "POST", 'path':"/$", 'function': testFunction},
+              {"method": "PUT", 'path':"^/public/cat.png$", 'function': testFunction},
+              {"method": "DELETE", 'path':"^/index", 'function': testFunction2},
+              {"method": "GET", 'path':"^/index", 'function': testFunction2},
+              {"method": "POST", 'path':"^/chat-message$", 'function': testFunction}]
+    requestRoutes = [Request(b"GET /index HTTP/1.1 200 Ok \r\nContent-Type: text/plain \r\n\r\nThis Request 1"), 
+                     Request(b"POST / HTTP/1.1 200 Ok \r\nContent-Type: text/plain \r\n\r\nThis Request 2"),
+                     Request(b"PUT /public/cat.png HTTP/1.1 200 Ok \r\nContent-Type: text/plain \r\n\r\nThis Request 3"),
+                     Request(b"DELETE /index HTTP/1.1 200 Ok \r\nContent-Type: text/plain \r\n\r\nThis Request 4"),
+                     Request(b"GET /index HTTP/1.1 200 Ok \r\nContent-Type: text/plain \r\n\r\nThis Request 5"),
+                     Request(b"POST /chat-message HTTP/1.1 200 Ok \r\nContent-Type: text/plain \r\n\r\nThis Request 6"),
+                     Request(b"POST /chat-message12 HTTP/1.1 200 Ok \r\nContent-Type: text/plain \r\n\r\nNot Found")
+                        
+    ]
+    expectedAnswers = ["Test Function was called", 'Test Function was called', 'Test Function was called', b"Test Function 2 was called now return Binary", 'Test Function was called', 'Test Function was called',  
+                       b"HTTP/1.1 404 Not Found \r\nContent-Type: text/plain\r\nContent-Length: 36\r\nX-Content-Type-Options: nosniff \r\n\r\nThe Requested Content Does Not Exist"
+]
+    
+    
+    for i in routes:
         
-# def test():
+        router.add_route(i['method'], i['path'], i['function'])
+        
     
-#     router = Router()
-#     request = [Request(b'GET /public/functions.js HTTP/1.1\r\nHost: localhost:8080\r\n\r\nfunction.js'),
-#                Request(b'GET /public/webrtc.js HTTP/1.1\r\nHost: localhost:8080\r\n\r\nwebrtc.js'),
-#                Request(b'GET / HTTP/1.1\r\nHost: localhost:8080\r\n\r\nindex page'), 
-#                Request(b'GET /public/style.css HTTP/1.1\r\nHost: localhost:8080\r\n\r\nstyleseheet'),
-#                Request(b'POST /register HTTP/1.1\r\nHost: localhost:8080\r\n\r\nusername_reg=qwersadf+&password_reg=sd+wqrfas%21%40%234+f434'),
-#                Request(b'GET /public/functions.js HTTP/1.1\r\nHost: localhost:8080\r\n\r\nfunction.js')
-#                ]
-    
-#     router.add_route("GET", "^/public/functions.js$", some)
-#     router.add_route("POST", "^/register$", some)
-#     router.add_route("GET", "^/$", some)
-#     router.add_route("GET", "^/public/functions.js$", some)
-#     router.add_route("GET", "^/public/functions.js$", some)
+    for i in range(len(requestRoutes)):
+        
+        assert router.route_request(requestRoutes[i]) == expectedAnswers[i]
+            
+        
+        
 
-#     for i in request:
-#         print(router.route_request(i))
-    
-#     print(router.routeHolder)
 
-# test()
+def test():
+    test1()
+    
+    return
+
+test()
