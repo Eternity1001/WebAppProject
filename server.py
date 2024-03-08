@@ -2,8 +2,10 @@ import socketserver
 from util.router import Router
 from util.request import Request
 from pymongo import MongoClient 
+from util.register import Register
 import json
-
+router = Router()  
+register = Register()    
 class MyTCPHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
@@ -16,7 +18,6 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         
         request = Request(received_data)
 
-        router = Router()
         
         a = 1
         if a == 1:
@@ -27,6 +28,7 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
             router.add_route("GET", '^/chat-messages', self.sendMessage)
             router.add_route("DELETE", '^/chat-messages/', self.deleteMessage)
             router.add_route("PUT", '^/chat-messages/', self.updateMessage)
+            router.add_route("POST", '^/register', register.store)
             a = 0
         self.request.sendall(router.route_request(request))
         # TODO: Parse the HTTP request and use self.request.sendall(response) to send your response

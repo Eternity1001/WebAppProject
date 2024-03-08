@@ -3,7 +3,8 @@ def extract_credentials(request):
     conversion = {'!': '%21' ,'@':'%40', '#':'%23', '$':'%24', '^':'%5E', '&':'%26', '(':'%28', ')':'%29', '-':'%2D', '_':'%5F', '=':'%3D', '%':'%25' }
 
     methodStr = {'/registration': ["username_reg=","&password_reg="],
-                 '/login': ["username_login=", '&password_login=']
+                 '/login': ["username_login=", '&password_login='],
+                 '/register' :  ["username_reg=","&password_reg="]
                  }
     
     body = request.body.decode().split(f"{methodStr[request.path][0]}", 1)[1]
