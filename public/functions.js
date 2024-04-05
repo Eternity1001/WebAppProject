@@ -53,10 +53,18 @@ function addMessageToChat(messageJSON) {
 function sendChat() {
     const chatTextBox = document.getElementById("chat-text-box");
     const message = chatTextBox.value;
+    let id; 
+
+    var elements = document.getElementsByClassName("hello");
+    for (var i = 0; i < elements.length; i++) {
+        id = elements[i].id;
+    }
+    console.log(id)
+
     chatTextBox.value = "";
     if (ws) {
         // Using WebSockets
-        socket.send(JSON.stringify({'messageType': 'chatMessage', 'message': message}));
+        socket.send(JSON.stringify({'messageType': 'chatMessage', 'message': message, 'XSRF': id}));
     } else {
         // Using AJAX
         const request = new XMLHttpRequest();
@@ -65,7 +73,7 @@ function sendChat() {
                 console.log(this.response);
             }
         }
-        const messageJSON = {"message": message};
+        const messageJSON = {"message": message, 'XSRF': id};
         request.open("POST", "/chat-messages");
         request.send(JSON.stringify(messageJSON));
     }

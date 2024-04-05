@@ -8,5 +8,6 @@ services:
     build: .
     environment:
       WAIT_HOSTS: mongo:27017
+      id: token
     ports:
       - '8080:8080'

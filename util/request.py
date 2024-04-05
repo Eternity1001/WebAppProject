@@ -15,68 +15,68 @@ class Request:
         self.cookies = {}
 
         # For All
-        splitString = request.split(b"\r\n\r\n", 1)
-        strSplitString = splitString[0].decode("UTF-8")
-        keyValue = ""
-        
-        
+    
+        if len(request) > 0:
+            splitString = request.split(b"\r\n\r\n", 1)
+            strSplitString = splitString[0].decode("UTF-8")
+            keyValue = ""
 
 
-        # For Body
+            # For Body
 
-        self.body = splitString[1]
+            self.body = splitString[1]
 
-        # For Method 
+            # For Method 
 
-        method = strSplitString.split("/", 1)
-        method = method[0].strip(" ")        
-        self.method = method
+            method = strSplitString.split(" ", 1)
+            method = method[0].strip(" ")        
+            self.method = method
 
         # For Path
 
-        pathString = strSplitString.split("HTTP")
-        path = pathString[0].split(f"{self.method}")
-        path = path[1].lstrip(" ").rstrip(" ")
-        self.path = path
+            pathString = strSplitString.split("HTTP")
+            path = pathString[0].split(f"{self.method}")
+            path = path[1].lstrip(" ").rstrip(" ")
+            self.path = path
 
         # For HTTP Versions
 
-        newPath = strSplitString.split(f"{self.path}", 1)
+            newPath = strSplitString.split(f"{self.path}", 1)
         
-        newPath = newPath[1].split("\r\n", 1)
+            newPath = newPath[1].split("\r\n", 1)
         
-        newPath = newPath[0].lstrip(" ").rstrip(" ")        
-        self.http_version = newPath
-        # For Header
+            newPath = newPath[0].lstrip(" ").rstrip(" ")        
+            self.http_version = newPath
+            # For Header
 
-        header = strSplitString.split("\r\n", 1)
-        header = header[1].split("\r\n")
+            header = strSplitString.split("\r\n", 1)
+            header = header[1].split("\r\n")
 
                               
                     
-        for i in header:                   
-            i = i.split(":", 1)
-            key = i[0].lstrip(" ").rstrip(" ")
-            value = i[1].lstrip(" ").rstrip(" ")
-            self.headers[key] = value
-
-        if self.headers.get("Cookie"):
-            cookie = self.headers["Cookie"]
-            cookie = cookie.split(";")
-            for i in cookie:
-                i = i.split("=", 1)
+            for i in header:                   
+                i = i.split(":", 1)
                 key = i[0].lstrip(" ").rstrip(" ")
                 value = i[1].lstrip(" ").rstrip(" ")
-                keyValue = keyValue + key + "=" + value + ";"
-                self.cookies[key] = value
+                self.headers[key] = value
+
+            if self.headers.get("Cookie"):
+                cookie = self.headers["Cookie"]
+                cookie = cookie.split(";")
+                for i in cookie:
+                    i = i.split("=", 1)
+                    key = i[0].lstrip(" ").rstrip(" ")
+                    value = i[1].lstrip(" ").rstrip(" ")
+                    keyValue = keyValue + key + "=" + value + ";"
+                    self.cookies[key] = value
                
-        if self.headers.get("Set-Cookie"):
-            cookie = self.headers["Set-Cookie"]
-            cookie = self.headers['Set-Cookie'].split("=", 1)
-            key = cookie[0].lstrip(" ").rstrip(" ")
-            value = cookie[1].lstrip(" ").rstrip(" ")
-            self.cookies[key] = value
-        
+            if self.headers.get("Set-Cookie"):
+                cookie = self.headers["Set-Cookie"]
+                cookie = self.headers['Set-Cookie'].split("=", 1)
+                key = cookie[0].lstrip(" ").rstrip(" ")
+                value = cookie[1].lstrip(" ").rstrip(" ")
+                self.cookies[key] = value
+                        
 
 def test1():
     request = Request(b'GET / HTTP/1.1\r\nHost: localhost:8080\r\nConnection: keep-alive\r\n\r\n')
@@ -85,7 +85,6 @@ def test1():
     assert request.headers["Host"] == "localhost:8080"  # note: The leading space in the header value must be removed
     assert request.body == b""  # There is no body for this request.
     # When parsing POST requests, the body must be in bytes, not str
-    print(request.path)
 
     # This is the start of a simple way (ie. no external libraries) to test your code.
     # It's recommended that you complete this test and add others, including at least one

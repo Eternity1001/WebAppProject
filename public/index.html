@@ -39,7 +39,18 @@
                 Chat:
                 <input id="chat-text-box" type="text">
             </label>
+
             <button id="chat-button" onclick="sendChat()">Send</button>
+            <form action="/fileUpload" id="image-form" method="post" enctype="multipart/form-data">
+                <br/>
+                <label for="form-file"> Send a File </label>
+                <input id="form-file" type="file" name="upload">
+                <input type="submit" value="Post">
+                <br/>
+
+            </form>
+            <!-- This is the XREF Token which is the ID -->
+            {{<div id="some" class="hello"> </div>}}
         </div>
 
     </div>
@@ -60,7 +71,7 @@
     <div class="user-list">
 
 
-        Register: 
+        {{Register: 
         <form action="/register" method="post" enctype="application/x-www-form-urlencoded">
             <label>Username:
                 <input id="reg-form-username" type="text" name="username_reg"/>
@@ -82,7 +93,13 @@
                 <input id="login-form-pass" type="password" name="password_login">
             </label>
             <input type="submit" value="Post">
-        </form>
+        </form>}}
+          
+        {{<form action="/logout" method="post" enctype="application/x-www-form-urlencoded"> 
+            <button type="submit" value="Post"> LogOut </button>
+        </form>}}
+
+        <form action = 'www.spotify'> </form>
 
 
         <form action="/profile-pic" id="image-form" method="post" enctype="multipart/form-data">
