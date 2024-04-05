@@ -11,7 +11,6 @@ class FileHandler:
 
     def handle_file(self, request):
 
-        print(request.body)
         data = parse_multipart(request)
 
 
